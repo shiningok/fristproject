@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.6/axios.min.js" 
+    integrity="sha512-RUkwGPgBmjCwqXpCRzpPPmGl0LSFp9v5wXtmG41+OS8vnmXybQX5qiG5adrIhtO03irWCXl+z0Jrst6qeaLDtQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
+</script>
+ <script>
+        document.addEventListener("DOMContentLoaded", function(){
+            // DOMContentLoaded - HTML 파일의 모든 내용을 DOM으로 로드 완료한 시점
+            // 브라우저에서 HTML을 모두 로드 한 시점
+           loadStoreList();
+        //    form 태그의 기본으로 설정되어있는 요청 기능을 제거하는 코드.
+           document.getElementById("search_area").addEventListener("submit", function(event){
+            // event - 이벤트 파라미터, submit 이벤트에 대한 정보를 담고 있음. 
+                event.preventDefault();
+           })
+        });
+
+        function loadStoreList(){
+            if(page == null || page == undefined) page = 0
+            if(keyword == null || keyword == undefined) keyword = ""
+            axios.get("http://192.168.0.56:8888/store/list/mystore")
+                .then(function(result){
+                    console.log(result);
+                    const StoreList = result.data.list;
+                    let tbody_content ="";
+                    for(let i =0; i<StoreList.length; i++){
+                    // genreList[i].genreSeq
+                    // genreList[i].genreName
+                    tbody_content += '<tr>'+
+                        '<td>'+StoreList[i].siSeq+'</td>'+
+                        '<td>'+
+                            '<a href="#">'+StoreList[i].siName+'</a>'+
+                        '</td>'+
+                         '<td>'+
+                            '<a href="#">'+StoreList[i].siDiscount+'</a>'+
+                        '</td>'+
+                          '<td>'+
+                            '<a href="#">'+StoreList[i].si_status+'</a>'+
+                        '</td>'+
+                    '</tr>'
+                    }
+                    document.querySelector("#list_table > tbody").innerHTML = tbody_content;
+                });
+            }
+    </script>
+</head>
+<body>
+    <table id="list_table">
+        <thead>
+            <tr>
+                <th>번호</th>
+                <th>가게</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>123</td>
+                <td>
+                    <a href="#">가게이름</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <!-- #search_area>(input#keyword+button#search(검색)) -->
+    </form>
+    <div id="pager_area">
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- html 캐싱 제거 -->
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Cache-Control" content="no-store">
+  <meta http-equiv="Expires" content="-1">
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <div style="text-align : center;">
+    <a href="/master/main"><img src="/images/banner.png" width="240" alt="page not found"></a>
+  </div>
+  <script th:inline="javascript">
+    const user = [[${session.loginUser}]]
+    if(user == null) { 
+      alert("관리자 전용페이지 입니다. 로그인 해 주세요"); 
+      location.href="/master";
+    }
+  </script>
+  <script th:inline="javascript">
+    const status = [[${session.loginUser.status}]];
+      if(status != 1) {
+        alert("승인된 관리자만 접근 가능한 메뉴입니다.");
+        location.href = "/master/index";
+      }
+  </script>
+  <style>
+    div {text-align: center; border-bottom: 1px solid #ccc; padding:10px;}
+  </style>
+</head>
+<body>
+  <header>
+    <nav id="gnb">
+      <div id="user_area">
+        <div th:if="${session.loginUser != null}">
+          <span id="login_user">
+            <b>
+              <span th:text="${session.loginUser.nickname}"></span>
+            </b>
+            님 환영합니다.
+            <a href="/master/logout"><button>로그아웃</button></a>
+            </span>
+        </div>
+      </div>
+      <div id="menu">
+        <th:block th:if="${session.loginUser.grade == 1}">
+          <a href="/master/list">관리자 계정 목록</a>
+          &nbsp;&nbsp;
+        </th:block>
+        <a href="/customer/list">일반회원 정보 관리</a>
+        &nbsp;&nbsp;
+        <a href="/owner/list">사장회원 정보 관리</a>
+        &nbsp;&nbsp;
+        <a href="/univ/list">배달장소(대학교) 관리</a>
+        &nbsp;&nbsp;
+        <a href="/store/list">가게정보 관리</a>
+        &nbsp;&nbsp;
+        <a href="/reviewList/list">리뷰정보 관리</a>
+      </div>
+    </nav>
+  </header>
+</body>
+</html>

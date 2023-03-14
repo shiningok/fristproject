@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+      h1 {text-align: center;}
+      h1 {background-color: rgb(117, 163, 165); color: rgb(0, 0, 0); padding: 10px;}
+      div {background-color: rgb(127, 146, 148); color: #fff; padding: 10px;}
+      div {text-align: center; border-bottom: 1px solid #ccc; padding:10px;}
+      body {border-collapse: collapse; width: 900px; margin: 140px auto; }
+      div2 { text-align: center; }
+    </style>
+</head>
+<body>
+  <div style="text-align : center;">
+  <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F2173E23C532FD81A27" width="220" alt="page not found">
+</div>
+  <h1>배달대 사장님 전용 사이트</h1>
+  <table>
+    <div>
+      <form action="/ceo/login" method="post">
+        <p>Owner ID</p>
+        <input type="text" name="owner_id" id="owner_id">
+        <p>Password</p>
+        <input type="password" name="owner_pwd" id="owner_pwd">
+        <div>
+        <button id="owner_login">로그인</button>
+        <p th:text="${message}"></p>
+        </div>
+      </form>
+    </div>
+  </table>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+      body {text-align: center;}
+      #input_form_table {margin: 0 auto; border-collapse: collapse; border: 0;}
+      #input_form_table input {width: 90%;}
+      #input_form_table td {padding: 10px;}
+      :placeholder-shown {text-align: center;}
+    </style>
+    <script th:inline="javascript">
+      const user = [[${session.loginUser}]]
+      if(user == null) { 
+        alert("관리자 전용페이지 입니다. 로그인 해 주세요"); 
+        location.href="/master";
+      }
+    </script>
+    <script th:inline="javascript">
+      const status = [[${session.loginUser.status}]];
+        if(status != 1) {
+          alert("승인된 관리자만 접근 가능한 메뉴입니다.");
+          location.href = "/master/index";
+        }
+    </script>
+</head>
+<body>
+  <div>
+    <h1>
+      <div style="text-align : center;">
+        <a href="/master/main"><img src="/images/banner.png" width="170" alt="page not found"></a>
+      </div>
+      <a href="/master/main" style="text-decoration: none; color: crimson">배달대</a>
+    </h1>
+  </div>
+    <h3>배달시간 추가</h3>
+    <form action="/pickupTime/add" method="post">
+      <table border="1" id="input_form_table">
+        <tbody>
+        <input type="number" name="univ_no" th:value="${univ_no}" hidden>
+        <td>
+        <input type="text" name="name" th:value="${name}" placeholder="이름 ((학교)점심1)">
+      </td>
+      <td>
+        <input type="text" name="closeTime" th:value="${closeTime}" placeholder="마감 시간 ( 00 : 00 : 00 )">
+      </td>
+      <td>
+        <input type="text" name="deliTime1" th:value="${deliTime1}" placeholder="수령 시간1 ( 00 : 00 : 00 ) ">
+      </td>
+      <td>
+        <input type="text" name="deliTime2" th:value="${deliTime2}" placeholder="수령 시간2 ( 00 : 00 : 00 )">
+      </td>
+        <th:block th:if="${result != null}">
+            <p th:text="${result.message}" style="color: red"></p>
+        </th:block>
+        <td>
+        <button>등록</button>
+      </td>
+      </tbody>
+    </table>
+    </form>
+    <br>
+    <a th:href="@{/univ/list(page=${page}, keyword=${keyword})}">이전으로</a>
+</body>
+</html>

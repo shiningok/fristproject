@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    h1 {text-align : center;}
+    h3 {text-align : center;}
+    h5 {text-align : center;}
+    h6 {text-align : center;}
+    th {background-color: darkgrey; color: #fff; padding: 10px;}
+    td {text-align: center; border-bottom: 1px solid darkgrey; padding: 10px;}
+    table{border-collapse: collapse; width: 1100px; margin: 10px auto;}
+    .search_area, .pager_area{text-align: center;}
+    
+    .wait { background-color: rgb(255, 181, 96); border-radius: 5px;
+    display: inline-block;
+    padding: 5px;
+    font-size: 12px;
+    color: #fff;}
+
+    .normal { background-color: rgb(31, 192, 82); border-radius: 5px;
+    display: inline-block;
+    padding: 5px;
+    font-size: 12px;
+    color: #fff;}
+
+    .banned { background-color: rgb(255, 106, 106); border-radius: 5px;
+    display: inline-block;
+    padding: 5px;
+    font-size: 12px;
+    color: #fff;}
+</style>
+  <script th:inline="javascript">
+    const user = [[${session.loginUser}]]
+    if(user == null) { 
+      alert("관리자 전용페이지 입니다. 로그인 해 주세요"); 
+      location.href="/master";
+    }
+  </script>
+  <script th:inline="javascript">
+    const status = [[${session.loginUser.status}]];
+      if(status != 1) {
+        alert("승인된 관리자만 접근 가능한 메뉴입니다.");
+        location.href = "/master/index";
+      }
+  </script>
+</head>
+<body>
+  <div>
+    <h1>
+      <div style="text-align : center;">
+        <a href="/master/main"><img src="/images/banner.png" width="170" alt="page not found"></a>
+      </div>
+      <a href="/master/main" style="text-decoration: none; color: crimson">배달대</a>
+    </h1>
+  </div>
+  <h3>사장회원 리스트</h3>
+  <h6>
+    <div th:if="${session.loginUser != null}">
+      <span id="login_user">
+        <b>
+          <span th:text="${session.loginUser.nickname}"></span>
+        </b>
+        님 환영합니다.
+        <a href="/master/logout"><button>로그아웃</button></a>
+      </span>
+  </h6>
+  <table>
+  <h5>
+    <a href="/customer/list" style="color: black;"><button>일반회원 관리페이지</button></a>
+    <a href="/univ/list" style="color: black;"><button>배달장소 관리페이지</button></a>
+    <a href="/store/list" style="color: black;"><button>가게정보 관리페이지</button></a>
+    <a href="/reviewList/list" style="color: black;"><button>리뷰정보 관리페이지</button></a>
+  </h5>
+  </table>
+  <table>
+    <thead>
+      <tr>
+        <th>번호</th>
+        <th>아이디</th>
+        <th>닉네임</th>
+        <th>이메일</th>
+        <th>휴대폰번호</th>
+        <th>가입일</th>
+        <th>상태</th>
+        <th style="color: red;">정지</th>
+        <th style="color: crimson;">삭제</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="owner, i : ${result.list}">
+      <td th:text="${owner.oiSeq}"></td>
+      <td th:text="${owner.oiId}"></td>
+      <td th:text="${owner.oiNickName}"></td>
+      <td th:text="${owner.oiEmail}"></td>
+      <td th:text="${owner.oiPhone}"></td>
+      <td th:text="${owner.oiJoinDt}"></td>
+      <td>
+        <th:block th:switch="${owner.oiStatus}">
+        <span th:case="1" class="normal">정상</span>
+        <span th:case="2" class="wait">승인대기</span>
+        <span th:case="3" class="banned">정지</span>
+        </th:block>
+      </td>
+      <td>
+        <th:block th:if="${owner.oiStatus == 1}">
+          <a th:href="@{ /owner/status (seq=${owner.oiSeq}, status=3) }" onclick="return confirm('블라인드 처리 하시겠습니까?')">블라인드</a>
+        </th:block>
+        <th:block th:if="${owner.oiStatus == 2}">
+          <a th:href="@{ /owner/status (seq=${owner.oiSeq}, status=1) }" onclick="return confirm('정지를 해제 하시겠습니까?')">가입승인</a>
+        </th:block>
+        <th:block th:if="${owner.oiStatus == 3}">
+          <a th:href="@{ /owner/status (seq=${owner.oiSeq}, status=1) }" onclick="return confirm('사용승인 하시겠습니까?')">정지해제</a>
+        </th:block>
+      </td>
+      <td>
+          <a th:href="@{ /owner/delete (oiSeq=${owner.oiSeq}) }"><button onclick="return confirm('계정을 삭제 하시겠습니까?')">계정삭제</button></a>
+      </td>
+      </tr>
+    </tbody>
+  </table>
+<div class="pager_area">
+    <th:block th:each="i : ${#numbers.sequence(0, result.totalpage - 1)}">
+        <th:block th:if="${result.totalpage >0}">
+        <th:block th:if="${keyword == null || keyword == ''}">
+            <a th:href="@{/owner/list(page=${i})}" th:text="${i+1}"></a>
+        </th:block>
+        <th:block th:if="${keyword != null && keyword != ''}">
+            <a th:href="@{/owner/list(page=${i}, keyword=${keyword})}" th:text="${i+1}"></a>
+        </th:block>
+        </th:block>
+    </th:block>
+</div>
+<div class="search_area">
+  <form action="/owner/list" method="get" id="search_form">
+      <input type="text" name="keyword" placeholder="아이디로 검색" th:value="${keyword}"><button>검색</button>
+  </form>
+</div>
+</body>
+</html>

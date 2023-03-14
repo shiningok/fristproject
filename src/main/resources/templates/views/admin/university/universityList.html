@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        h1 {text-align : center;}
+        h3 {text-align : center;}
+        h5 {text-align : center;}
+        h6 {text-align : center;}
+        th {background-color: darkgrey; color: #fff; padding: 10px;}
+        td {text-align: center; border-bottom: 1px solid darkgrey; padding: 10px;}
+        table{border-collapse: collapse; width: 1100px; margin: 10px auto;}
+        .search_area, .pager_area{text-align: center;}
+    </style>
+    <script th:inline="javascript">
+      const user = [[${session.loginUser}]]
+      if(user == null) { 
+        alert("관리자 전용페이지 입니다. 로그인 해 주세요"); 
+        location.href="/master";
+      }
+    </script>
+    <script th:inline="javascript">
+      const status = [[${session.loginUser.status}]];
+      if(status != 1) {
+        alert("승인된 관리자만 접근 가능한 메뉴입니다.");
+        location.href = "/master/index";
+      }
+    </script>
+</head>
+<body>
+    <div>
+      <h1>
+        <div style="text-align : center;">
+            <a href="/master/main"><img src="/images/banner.png" width="170" alt="page not found"></a>
+          </div>
+        <a href="/master/main" style="text-decoration: none; color: crimson">배달대</a>
+      </h1>
+    </div>
+    <h3>대학정보 리스트</h3>
+    <h6>
+        <div th:if="${session.loginUser != null}">
+          <span id="login_user">
+            <b>
+              <span th:text="${session.loginUser.nickname}"></span>
+            </b>
+            님 환영합니다.
+            <a href="/master/logout"><button>로그아웃</button></a>
+          </span>
+      </h6>
+    <table>
+        <h5>
+            <a href="/customer/list" style="color: black;"><button>일반회원 관리페이지</button></a>
+            <a href="/owner/list" style="color: black;"><button>사장회원 관리페이지</button></a>
+            <a href="/store/list" style="color: black;"><button>가게정보 관리페이지</button></a>
+            <a href="/reviewList/list" style="color: black;"><button>리뷰정보 관리페이지</button></a>
+        </h5>
+    </table>
+    <h5>
+      <a href="/univ/add">대학교 추가</a>
+    </h5>
+<table>
+    <thead>
+        <tr>
+            <th>번호</th>
+            <th>대학명</th>
+            <th style="color: crimson;">삭제</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="univ : ${result.list}">
+            <td th:text="${univ.uiSeq}"></td>
+            <td>
+                <a th:href="@{/univ/detail(univ_no=${univ.uiSeq}, page=${result.currentPage}, keyword=${keyword})}" th:text="${univ.uiName}"></a>
+            </td>
+            <td>
+                <a th:href="@{/univ/delete(univ_no=${univ.uiSeq})}"><button onclick="return confirm('학교를 삭제 하시겠습니까?')">삭제</button></a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<div class="pager_area">
+    <th:block th:each="i : ${#numbers.sequence(0, result.totalpage - 1)}">
+        <th:block th:if="${result.totalpage >0}">
+        <th:block th:if="${keyword == null || keyword == ''}">
+            <a th:href="@{/univ/list(page=${i})}" th:text="${i+1}"></a>
+        </th:block>
+        <th:block th:if="${keyword != null && keyword != ''}">
+            <a th:href="@{/univ/list(page=${i}, keyword=${keyword})}" th:text="${i+1}"></a>
+        </th:block>
+        </th:block>
+    </th:block>
+</div>
+<div class="search_area">
+    <form action="/univ/list" method="get" id="search_form">
+        <input type="text" name="keyword" placeholder="대학교 검색" th:value="${keyword}"><button>검색</button>
+    </form>
+</div>
+</body>
+</html>

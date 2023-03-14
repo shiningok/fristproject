@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+      body {text-align: center;}
+      #input_form_table {margin: 0 auto; border-collapse: collapse; border: 0;}
+      #input_form_table input {width: 70%;}
+      #input_form_table td {padding: 10px;}
+    </style>
+</head>
+<body>
+  <div>
+    <h1>
+      <div style="text-align : center;">
+        <a href="/master/main"><img src="/images/banner.png" width="170" alt="page not found"></a>
+      </div>
+      <a href="/master/main" style="text-decoration: none; color: crimson">배달대</a>
+    </h1>
+  </div>
+  <h3>관리자 등록 신청</h3>
+  <form action="/master/add" method="post">
+    <table border="1" id="input_form_table">
+      <tbody>
+        <tr>
+          <td>아이디</td>
+          <th:block th:if="${inputdata!=null}">
+            <td><input type="text" name="id" id="id" th:value="${inputdata.id}"></td>
+          </th:block>
+          <th:block th:if="${inputdata==null}">
+            <td><input type="text" name="id" id="id"></td>
+          </th:block>
+        </tr>
+        <th:block th:if="${message != null}">
+        <tr>
+          <td colspan="3" th:text="${message}" style="color:red;"></td>
+        </tr>
+        </th:block>
+        <tr>
+          <td>비밀번호</td>
+          <td colspan="2"><input type="password" name="pwd" id="pwd"></td>
+        </tr>
+        <tr>
+          <td>닉네임</td>
+          <th:block th:if="${inputdata!=null}">
+            <td colspan="2"><input type="text" name="nickName" id="nickName" th:value="${inputdata.nickName}"></td>
+          </th:block>
+          <th:block th:if="${inputdata==null}">
+            <td colspan="2"><input type="text" name="nickName" id="nickName"></td>
+          </th:block>
+        </tr>
+        <tr>
+          <td colspan="3">
+            <button id="save">등록</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </form>
+  <br>
+  <a href="/master/login">메인으로</a>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

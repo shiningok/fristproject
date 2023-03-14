@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+      h1 {text-align: center;}
+      h1 {background-color: rgb(119, 119, 119); color: #fff; padding: 10px;}
+      div {background-color: rgb(29, 27, 27); color: #fff; padding: 10px;}
+      div {text-align: center; border-bottom: 1px solid #ccc; padding:10px;}
+      body {border-collapse: collapse; width: 900px; margin: 140px auto; }
+      div2 { text-align: center; }
+    </style>
+</head>
+<body>
+  <div style="text-align : center;">
+  <img src="/images/loginimage.png" width="220" alt="page not found">
+</div>
+  <h1>배달대 관리자 전용 사이트</h1>
+  <table>
+    <div>
+      <form action="/master/login" method="post">
+        <p>Admin ID</p>
+        <input type="text" name="master_id" id="master_id">
+        <p>Password</p>
+        <input type="password" name="master_pwd" id="master_pwd">
+        <div>
+        <button id="admin_login">로그인</button>
+      </div>
+      </form>
+    </div>
+    <div>
+      <a href="/master/add"><strong style="color: #fff;">관리자 등록신청 페이지</strong></a>
+    </div>
+  </table>
+  <div2 th:if="${loginStatus == 'failed'}">
+    <p th:text="${message}" style="color: red; font-weight: bold; font-size: 16px;"></p>
+  </div2>
+</body>
+</html>

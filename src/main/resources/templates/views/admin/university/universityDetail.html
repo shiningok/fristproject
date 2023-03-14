@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+      h1 {text-align : center;}
+      h3 {text-align : center;}
+      h5 {text-align : center;}
+      h6 {text-align : center;}
+      th {background-color: darkgrey; color: #fff; padding: 10px;}
+      td {text-align: center; border-bottom: 1px solid darkgrey; padding: 10px;}
+      table{border-collapse: collapse; width: 1100px; margin: 10px auto;}
+      .search_area, .pager_area{text-align: center;}
+  </style>
+    <script th:inline="javascript">
+        const user = [[${session.loginUser}]]
+        if(user == null) { 
+          alert("관리자 전용페이지 입니다. 로그인 해 주세요"); 
+          location.href="/master";
+        }
+      </script>
+      <script th:inline="javascript">
+        const status = [[${session.loginUser.status}]];
+          if(status != 1) {
+            alert("승인된 관리자만 접근 가능한 메뉴입니다.");
+            location.href = "/master/index";
+          }
+      </script>
+</head>
+<body>
+  <div>
+    <h1>
+      <div style="text-align : center;">
+        <a href="/master/main"><img src="/images/banner.png" width="170" alt="page not found"></a>
+      </div>
+      <a href="/master/main" style="text-decoration: none; color: crimson">배달대</a>
+    </h1>
+  </div>
+  <h3>배달 수령장소 리스트</h3>
+  <h6>
+    <div th:if="${session.loginUser != null}">
+      <span id="login_user">
+        <b>
+          <span th:text="${session.loginUser.nickname}"></span>
+        </b>
+        님 환영합니다.
+        <a href="/master/logout"><button>로그아웃</button></a>
+      </span>
+  </h6>
+  <table>
+    <h5>
+      <a href="/customer/list" style="color: black;"><button>일반회원 관리페이지</button></a>
+      <a href="/owner/list" style="color: black;"><button>사장회원 관리페이지</button></a>
+      <a href="/univ/list" style="color: black;"><button>배달장소 관리페이지</button></a>
+      <a href="/store/list" style="color: black;"><button>가게정보 관리페이지</button></a>
+      <a href="/reviewList/list" style="color: black;"><button>리뷰정보 관리페이지</button></a>
+    </h5>
+  </table>
+  <h5>
+    <a th:href="@{/pickup/add(univ_no=${univ_no})}">수령장소 추가</a>
+  </h5>
+    <p>
+    <table>
+    <thead>
+      <tr>
+        <th>번호</th>
+        <th>수령장소</th>
+        <th style="color: crimson;">삭제</th>
+      </tr>
+    </thead>
+    <tbody>
+    <tr th:each="pickup : ${univ.pickupAreas}">
+      <td th:text="${pickup.puaSeq}"></td>  
+      <td th:text="${pickup.puaName}"></td>
+        <td>
+          <a th:href="@{/pickup/delete(pickup_no=${pickup.puaSeq})}" onclick="return confirm('정말로 삭제 하시겠습니까?')">삭제</a>
+        </td>
+    </tr>
+    </tbody>
+    <th:block th:if="${univ.status == false}">
+        <p>잘못된 접근입니다.</p>
+    </th:block>
+  </table>
+</p>
+<br>
+<h5>
+<a th:href="@{/pickupTime/add(univ_no=${univ_no})}">배달시간 추가</a>
+</h5>
+    <table>
+    <thead>
+      <tr>
+        <th>번호</th>
+        <th>배달파트</th>
+        <th>마감시간</th>
+        <th>수령시간1</th>
+        <th>수령시간2</th>
+        <th style="color: crimson;">삭제</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="pickupTime : ${univ.pickupTimes}">
+        <td th:text="${pickupTime.utiSeq}"></td>  
+        <td th:text="${pickupTime.utiName}"></td>
+        <td th:text="${pickupTime.utiCloseTime}"></td>
+        <td th:text="${pickupTime.utiPickupTime1}"></td>
+        <td th:text="${pickupTime.utiPickupTime2}"></td>
+        <td>
+          <a th:href="@{/pickupTime/delete(pickupTime_no=${pickupTime.utiSeq})}" onclick="return confirm('정말로 삭제 하시겠습니까?')">삭제</a>
+        </td>
+      </tr>
+      </tbody>
+      <th:block th:if="${univ.status == false}">
+        <p>잘못된 접근입니다.</p>
+    </th:block>
+  </table>
+</body>
+</html>
